@@ -1,0 +1,17 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "airbnb-base"
+  ],
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es6": true,
+    "node": true
+  },
+  "rules": {
+    "no-console": "off",
+    "arrow-parens": "off",
+    "no-restricted-syntax": "off"
+  }
+}
