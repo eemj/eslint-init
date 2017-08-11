@@ -98,14 +98,7 @@ promptUser().then(configs => {
     JSON.stringify({
       extends: ['eslint:recommended', ...configs.map(config => (
         config.match(/eslint-config-(.*?)$/)[1]
-      ))],
-      env: {
-        browser: true,
-        commonjs: true,
-        es6: true,
-        node: true,
-      },
-      rules: {},
+      ))]
     }, null, 2), 'utf8',
   );
 }).catch(error => {
