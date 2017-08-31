@@ -23,14 +23,14 @@ function promptUser() {
         message: 'Which style guide would you want to follow?',
         choices: styleGuides.map(style => ({
           value: style.value,
-          name: style.name,
-        })),
+          name: style.name
+        }))
       },
       {
         type: 'confirm',
         name: 'react',
-        message: 'Are you going to use React?',
-      },
+        message: 'Are you going to use React?'
+      }
     ]).then(answers => {
       let styles = [answers.style];
       if (answers.react) {
@@ -53,7 +53,7 @@ promptUser().then(configs => {
       dash,
       bold('Creating a'),
       highlight('package.json'),
-      bold('file ...'),
+      bold('file ...')
     ].join(' '));
 
     execSync('npm init -y');
@@ -65,7 +65,7 @@ promptUser().then(configs => {
     bold('Fetching infos for'),
     configs.map(config => highlight(config))
       .join(bold(', ')),
-    bold('...'),
+    bold('...')
   ].join(' '));
 
   const peers = new Map();
@@ -73,22 +73,27 @@ promptUser().then(configs => {
   for (const config of configs) {
     const { peerDependencies } = JSON.parse(execSync(`npm info "${config}@latest" --json`));
     for (const dependency in peerDependencies) {
-      if (!peers.has(dependency)) peers.set(dependency, null);
+      if (!dependency) continue;
+      let version = peerDependencies[dependency];
+      if (version.indexOf('||')) version = version.split(' || ').pop();
+      if (!peers.has(dependency)) peers.set(dependency, version);
     }
   }
 
-  const packages = [...peers.entries()].map(peer => peer.shift()).concat(configs);
+  const packages = [...peers]
+    .map(([dependency, version]) => ({ dependency, version }))
+    .concat(configs.map(config => ({ dependency: config, version: 'latest' })));
 
   // Installing the packages we recieved above.
   console.log([
     dash,
     bold('Installing'),
-    packages.map(pkg => highlight(pkg))
+    packages.map(pkg => highlight(pkg.dependency))
       .join(bold(', ')),
-    bold('...'),
+    bold('...')
   ].join(' '));
 
-  execSync(`npm install --save-dev ${packages.join(' ')}`);
+  execSync(`npm install --save-dev ${packages.map(pkg => `"${pkg.dependency}@${pkg.version}"`).join(' ')}`);
 
   // Creating a JSON format eslint configuration.
   console.log(dash, bold('Creating configuration ...'));
@@ -96,9 +101,11 @@ promptUser().then(configs => {
   fs.writeFileSync(
     path.join(process.cwd(), '.eslintrc'),
     JSON.stringify({
-      extends: ['eslint:recommended', ...configs.map(config => (
-        config.match(/eslint-config-(.*?)$/)[1]
-      ))]
+      extends: (
+        configs.length === 1
+          ? configs[0].match(/eslint-config-(.*?)$/)[1]
+          : [...configs.map(config => config.match(/eslint-config-(.*?)$/)[1])]
+      )
     }, null, 2), 'utf8',
   );
 }).catch(error => {
