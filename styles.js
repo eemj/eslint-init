@@ -4,15 +4,15 @@ module.exports = [
     name: 'Airbnb',
     react: {
       replace: true,
-      name: 'airbnb',
-    },
+      name: 'airbnb'
+    }
   },
   {
     value: 'standard',
     name: 'Standard',
     react: {
       replace: false,
-      name: 'standard-react',
-    },
-  },
+      name: 'standard-react'
+    }
+  }
 ];
