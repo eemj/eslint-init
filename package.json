@@ -3,12 +3,9 @@
   "version": "1.0.0",
   "description": "A standalone package of 'eslint --init' with customizable features.",
   "main": "index.js",
-  "bin": {
-    "eslint-init": "index.js"
-  },
+  "bin": { "eslint-init": "index.js" },
   "dependencies": {
     "chalk": "^2.1.0",
-    "clear": "^0.0.1",
     "inquirer": "^3.2.1"
   },
   "devDependencies": {
@@ -17,15 +14,11 @@
     "eslint-plugin-import": "^2.7.0"
   },
   "scripts": {
-    "start": "node ./"
+    "start": "node .",
+    "lint": "eslint . --color"
   },
-  "keywords": [
-    "airbnb",
-    "configuration",
-    "eslint",
-    "standard"
-  ],
+  "keywords": ["airbnb", "configuration", "eslint", "standard"],
   "author": "eemj",
-  "license": "ISC",
+  "license": "MIT",
   "preferGlobal": true
 }
